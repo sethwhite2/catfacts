@@ -1,5 +1,12 @@
-import {Fact} from '../models/fact';
+import {FactInterface} from '../models/fact';
 
-export default interface FactRemoteAdapter {
-  fetchFacts(): Promise<Fact[]>;
+export interface FetchFactsResult {
+  facts: FactInterface[];
+  nextUrl: string | null;
 }
+
+interface FactRemoteAdapter {
+  fetchFacts(url?: string): Promise<FetchFactsResult>;
+}
+
+export default FactRemoteAdapter;

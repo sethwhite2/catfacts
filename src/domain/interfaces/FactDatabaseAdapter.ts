@@ -1,8 +1,8 @@
-import {Fact} from '../models/fact';
+import {FactInterface} from '../models/fact';
 
 interface FactDatabaseAdapter {
-  getFacts(): Promise<Fact[]>;
-  saveFacts(facts: Fact[]): void;
+  getFacts(): Promise<FactInterface[]>;
+  saveFacts(facts: FactInterface[]): void;
   deleteFacts(): void;
 }
 

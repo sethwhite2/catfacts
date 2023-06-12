@@ -1,17 +1,22 @@
 import React, {useEffect} from 'react';
-import {FlatList, StyleSheet, Text} from 'react-native';
+import {FlatList, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import {Fact} from '../domain/models/fact';
 import useFacts from '../hooks/useFacts';
 
 interface FactItemProps {
   fact: Fact;
+  onPress?: () => void;
 }
 
-const FactItem = ({fact}: FactItemProps) => {
-  return <Text style={stylesheet.item}>{fact.fact}</Text>;
+const FactItem = ({fact, onPress}: FactItemProps) => {
+  return (
+    <TouchableOpacity onPress={onPress}>
+      <Text style={stylesheet.item}>{fact.fact}</Text>
+    </TouchableOpacity>
+  );
 };
 
-const FactList = () => {
+const FactList = ({navigation}) => {
   const {facts, doFetchFacts, doDeleteFacts} = useFacts();
   useEffect(() => {
     doDeleteFacts();
@@ -20,7 +25,17 @@ const FactList = () => {
     }, 2000);
   }, [doFetchFacts, doDeleteFacts]);
   return (
-    <FlatList data={facts} renderItem={({item}) => <FactItem fact={item} />} />
+    <FlatList
+      data={facts}
+      renderItem={({item}) => (
+        <FactItem
+          fact={item}
+          onPress={() => {
+            navigation.navigate('Details', {factId: item.fact});
+          }}
+        />
+      )}
+    />
   );
 };
 

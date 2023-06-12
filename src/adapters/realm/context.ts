@@ -1,9 +1,10 @@
 import {createRealmContext} from '@realm/react';
 import Realm from 'realm';
-import {FactSchema} from './schema';
+import {Fact} from '../../domain/models/fact';
 
 const realmConfig: Realm.Configuration = {
-  schema: [FactSchema],
+  schema: [Fact],
+  deleteRealmIfMigrationNeeded: true,
   schemaVersion: 1,
 };
 

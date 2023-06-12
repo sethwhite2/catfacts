@@ -1,11 +1,14 @@
-import {Fact} from '../../domain/models/fact';
-import FactRemoteAdapter from '../../domain/interfaces/FactRemoteAdapter';
+import FactRemoteAdapter, {
+  FetchFactsResult,
+} from '../../domain/interfaces/FactRemoteAdapter';
 import {formatFacts} from './formatters';
 import {FactsFromApi} from './schema';
 
 class FactApiAdapter implements FactRemoteAdapter {
-  fetchFacts = async (): Promise<Fact[]> => {
-    return fetch('https://catfact.ninja/facts/', {
+  fetchFacts = async (
+    url: string = 'https://catfact.ninja/facts/',
+  ): Promise<FetchFactsResult> => {
+    return fetch(url, {
       method: 'GET',
       headers: {
         Accept: 'application/json',
@@ -15,7 +18,10 @@ class FactApiAdapter implements FactRemoteAdapter {
       .then(response => response.json())
       .then(data => {
         const apiFacts = data as unknown as FactsFromApi;
-        return formatFacts(apiFacts);
+        return {
+          facts: formatFacts(apiFacts),
+          nextUrl: apiFacts.next_page_url,
+        };
       });
   };
 }

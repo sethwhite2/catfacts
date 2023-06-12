@@ -1,4 +1,4 @@
-import {Fact} from '../../domain/models/fact';
+import {Fact, FactInterface} from '../../domain/models/fact';
 import FactDatabaseAdapter from '../../domain/interfaces/FactDatabaseAdapter';
 
 class FactRealmAdapter implements FactDatabaseAdapter {
@@ -8,15 +8,18 @@ class FactRealmAdapter implements FactDatabaseAdapter {
     this.realm = realm;
   }
 
-  getFacts = async (): Promise<Fact[]> => {
-    const facts = this.realm.objects<Fact>('Fact');
-    return facts as unknown as Fact[];
+  getFacts = async (): Promise<FactInterface[]> => {
+    return this.realm.objects<Fact>(Fact.schema.name).flat();
   };
 
-  saveFacts = async (facts: Fact[]) => {
+  saveFacts = async (facts: FactInterface[]) => {
     this.realm.write(() => {
       facts.forEach(fact => {
-        this.realm.create('Fact', {...fact}, Realm.UpdateMode.Modified);
+        this.realm.create(
+          Fact.schema.name,
+          {...fact},
+          Realm.UpdateMode.Modified,
+        );
       });
     });
   };
